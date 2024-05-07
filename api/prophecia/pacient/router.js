@@ -44,7 +44,7 @@ pacientRouter.get("/:id", async (req, res) => {
 
 pacientRouter.delete("/:id", async (req, res) => {
     try {
-        const deletedProduct = await pacientModel.deleteOne({ _id: req.params.id });
+        const deletedProduct = await pacientModel.delete({ _id: req.params.id });
         if (deletedProduct.deletedCount === 1) {
             res.status(200).send({ deleted: true });
         } else {
@@ -55,25 +55,3 @@ pacientRouter.delete("/:id", async (req, res) => {
     }
 });
 
-pacientRouter.put("/restore/:id", async (req, res) => {
-    try {
-        const restoredProduct = await pacientModel.restore(req.params.id);
-        if (restoredProduct) {
-            res.status(200).send(restoredProduct);
-        } else {
-            res.status(404).json({ message: "Paciente no encontrado" });
-        }
-    } catch (error) {
-        return res.status(500).json({ message: "Error interno del servidor" });
-    }
-});
-
-
-pacientRouter.get("/deleted", async (req, res) => {
-    try {
-        const deletedPatients = await pacientModel.findDeleted({ deletedAt: true });
-        res.status(200).send(deletedPatients);
-    } catch (error) {
-        return res.status(500).json({ message: "Error interno del servidor" });
-    }
-});
