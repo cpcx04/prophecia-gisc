@@ -12,7 +12,7 @@ RUN npm install
 COPY . .
 
 # Exponer el puerto en el que la API va a estar escuchando
-EXPOSE 3000
+EXPOSE 3001
 
 # Comando para iniciar la API
 CMD ["node", "index.js"]

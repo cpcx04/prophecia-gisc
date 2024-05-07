@@ -5,7 +5,7 @@ services:
       context: ./api/prophecia
       dockerfile: Dockerfile
     ports:
-      - "3001:3000"  # Mapear el puerto del contenedor al puerto del host
+      - "3001:3001"  # Mapear el puerto del contenedor al puerto del host
     depends_on:
       - mongodb  # Dependencia de MongoDB
 
@@ -19,4 +19,4 @@ services:
   mongodb:
     image: mongo
     ports:
-      - "3100:27017"  # Mapear el puerto del contenedor al puerto del host
+      - "27017:27017"  # Mapear el puerto del contenedor al puerto del host
