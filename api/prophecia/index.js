@@ -11,7 +11,7 @@ app.use(cors());
 
 app.use("/paciente", pacientRouter);
 
-const mongoURI = "mongodb://localhost:27017/pacientes";
+const mongoURI = "mongodb://mongodb:27017/pacientes";
 
 mongoose.connect(mongoURI).then(() => {
   console.log('Conexión a MongoDB establecida correctamente');
