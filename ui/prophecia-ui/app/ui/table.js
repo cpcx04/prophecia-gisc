@@ -7,7 +7,7 @@ export default function TablePaciente({ rowClickUrl = '' }) {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:3100/paciente')
+        fetch('http://localhost:3001/paciente')
         .then(response => response.json())
         .then(data => setData(data))
         .catch(error => console.error('Error al obtener los datos:', error));
