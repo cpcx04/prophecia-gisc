@@ -1,7 +1,10 @@
 import express from 'express';
 import { pacientModel } from './model.js';
+import { exec } from 'child_process';
 
 export const pacientRouter = express.Router();
+
+pacientRouter.use(express.json());
 
 pacientRouter.post("/", async (req, res) => {
     try {
@@ -14,6 +17,37 @@ pacientRouter.post("/", async (req, res) => {
         return res.status(500).json({ message: "Error interno del servidor" });
     }
 });
+
+pacientRouter.post("/calculate", (req, res) => {
+  const inputData = req.body; 
+  const pythonScriptPath = "pacient/mock_data.py";
+  const inputString = JSON.stringify(inputData);
+
+  exec(
+    `python3 ${pythonScriptPath} '${inputString}'`,
+    (error, stdout, stderr) => {
+        if (error) {
+            console.error(`exec error: ${error}`);
+            res.status(500).send("Error executing Python script");
+            return;
+        }
+        if (stderr) {
+            console.error(`stderr: ${stderr}`);
+            res.status(500).send("Python script error");
+            return;
+        }
+        try {
+            const output = JSON.parse(stdout);
+            res.status(200).json(output);
+        } catch (parseError) {
+            console.error("Error parsing Python output:", parseError);
+            res.status(500).send("Error parsing Python output:");
+        }
+    }
+);
+});
+
+
 
 pacientRouter.get("/", async (req, res) => {
     try {

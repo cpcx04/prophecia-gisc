@@ -1,6 +1,9 @@
 # Usar una imagen base de Node.js
 FROM node:latest
 
+# Instalar Python
+RUN apt-get update && apt-get install -y python3 python3-pip
+
 # Establecer el directorio de trabajo dentro del contenedor
 WORKDIR /usr/src/app
 

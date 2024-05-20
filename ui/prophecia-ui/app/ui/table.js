@@ -15,7 +15,10 @@ export default function TablePaciente({ rowClickUrl = '' }) {
      
 
     const handleRowClick = (url, rowData) => {
-        router.push(url);
+        
+        router.push({
+            path: url,
+            query: { pacienteData: JSON.stringify(rowData) }});
     };
 
     return (
