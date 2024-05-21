@@ -1,6 +1,5 @@
 'use client'
 
-import NavBar from '../../ui/navbar';
 import TablePaciente from '../../ui/table';
 import Searcher from '../../ui/searcher';
 

@@ -14,40 +14,45 @@ pacientRouter.post("/", async (req, res) => {
         if (error.code === 11000 && error.keyPattern && error.keyPattern.name) {
             return res.status(400).json({ message: "Paciente ya existente" });
         }
+        console.log(error)
         return res.status(500).json({ message: "Error interno del servidor" });
     }
 });
 
-pacientRouter.post("/calculate", (req, res) => {
-  const inputData = req.body; 
-  const pythonScriptPath = "pacient/mock_data.py";
-  const inputString = JSON.stringify(inputData);
+pacientRouter.post("/calculate/:id", (req, res) => {
+    const inputData = req.body; 
+    const pythonScriptPath = "pacient/mock_data.py";
+    const inputString = JSON.stringify(inputData);
+    console.log(req.params.id);
+    exec(
+        `python3 ${pythonScriptPath} '${inputString}'`,
+        async (error, stdout, stderr) => {
+            if (error) {
+                console.error(`exec error: ${error}`);
+                res.status(500).send("Error executing Python script");
+                return;
+            }
+            if (stderr) {
+                console.error(`stderr: ${stderr}`);
+                res.status(500).send("Python script error");
+                return;
+            }
+            try {
+                const output = JSON.parse(stdout);
+                const updatedProduct = await pacientModel.findOneAndUpdate(
+                    { _id: req.params.id },
+                    { $push: { consultas: output } },
+                    { new: true }
+                );
 
-  exec(
-    `python3 ${pythonScriptPath} '${inputString}'`,
-    (error, stdout, stderr) => {
-        if (error) {
-            console.error(`exec error: ${error}`);
-            res.status(500).send("Error executing Python script");
-            return;
+                res.status(200).json(updatedProduct);
+            } catch (parseError) {
+                console.error("Error parsing Python output:", parseError);
+                res.status(500).send("Error parsing Python output");
+            }
         }
-        if (stderr) {
-            console.error(`stderr: ${stderr}`);
-            res.status(500).send("Python script error");
-            return;
-        }
-        try {
-            const output = JSON.parse(stdout);
-            res.status(200).json(output);
-        } catch (parseError) {
-            console.error("Error parsing Python output:", parseError);
-            res.status(500).send("Error parsing Python output:");
-        }
-    }
-);
+    );
 });
-
-
 
 pacientRouter.get("/", async (req, res) => {
     try {
@@ -78,7 +83,7 @@ pacientRouter.get("/:id", async (req, res) => {
 
 pacientRouter.delete("/:id", async (req, res) => {
     try {
-        const deletedProduct = await pacientModel.delete({ _id: req.params.id });
+        const deletedProduct = await pacientModel.deleteOne({ _id: req.params.id });
         if (deletedProduct.deletedCount === 1) {
             res.status(200).send({ deleted: true });
         } else {
@@ -88,4 +93,3 @@ pacientRouter.delete("/:id", async (req, res) => {
         return res.status(500).json({ message: "Error interno del servidor" });
     }
 });
-

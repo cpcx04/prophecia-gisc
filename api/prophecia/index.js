@@ -48,7 +48,7 @@ async function generateExampleData() {
         nusha: 'AN-886575',
         dni: '12345678A',
         fechaDenacimiento: '1990-01-01',
-        domicilio: 'Calle Falsa 123'
+        domicilio: 'Calle Falsa 123',
       },
       {
         nombre: 'María',

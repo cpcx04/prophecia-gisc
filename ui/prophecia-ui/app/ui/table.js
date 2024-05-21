@@ -14,11 +14,18 @@ export default function TablePaciente({ rowClickUrl = '' }) {
      }, []);
      
 
-    const handleRowClick = (url, rowData) => {
+    const handleRowClick = (rowClickUrl, rowData) => {
         
-        router.push({
-            path: url,
-            query: { pacienteData: JSON.stringify(rowData) }});
+        router.push(
+            `${rowClickUrl}`,
+            { 
+                query: 
+                {
+                    pacienteData: JSON.stringify(rowData)
+                   
+                }
+            }
+           );
     };
 
     return (

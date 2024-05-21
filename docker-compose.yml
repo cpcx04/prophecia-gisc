@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 services:
   api:
     build:
@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3001:3001"  # Mapear el puerto del contenedor al puerto del host
+    volumes:
+      - ./api/prophecia:/usr/src/app
     depends_on:
       - mongodb  # Dependencia de MongoDB
 
