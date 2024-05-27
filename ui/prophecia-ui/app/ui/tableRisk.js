@@ -10,7 +10,7 @@ export default function TableRiesgoPaciente({ columns = [], data = [], renderCel
             case 'naranja':
                 return 'bg-orange-500';
             default:
-                return '';
+                return 'bg-green-500';
         }
     };
 

@@ -19,11 +19,11 @@ pacientRouter.post("/", async (req, res) => {
     }
 });
 
-pacientRouter.post("/calculate/:id", (req, res) => {
+pacientRouter.post("/calculate/:nusha", (req, res) => {
     const inputData = req.body; 
     const pythonScriptPath = "pacient/mock_data.py";
     const inputString = JSON.stringify(inputData);
-    console.log(req.params.id);
+    console.log(req.params.nusha);
     exec(
         `python3 ${pythonScriptPath} '${inputString}'`,
         async (error, stdout, stderr) => {
@@ -40,7 +40,7 @@ pacientRouter.post("/calculate/:id", (req, res) => {
             try {
                 const output = JSON.parse(stdout);
                 const updatedProduct = await pacientModel.findOneAndUpdate(
-                    { _id: req.params.id },
+                    { nusha: req.params.nusha },
                     { $push: { consultas: output } },
                     { new: true }
                 );
@@ -72,10 +72,14 @@ pacientRouter.patch("/:id", async (req, res) => {
     }
 });
 
-pacientRouter.get("/:id", async (req, res) => {
+pacientRouter.get("/:nusha", async (req, res) => {
     try {
-        const product = await pacientModel.findOne({ _id: req.params.id });
-        res.status(200).send(product);
+        const product = await pacientModel.findOne({ nusha: req.params.nusha });
+        if (product) {
+            res.status(200).send(product);
+        } else {
+            res.status(404).json({ message: "Paciente no encontrado" });
+        }
     } catch (error) {
         return res.status(500).json({ message: "Error interno del servidor" });
     }

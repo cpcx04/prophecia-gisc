@@ -7,15 +7,9 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-/**
- * 
- *  Cuando se envía un formulario de manera convencional,
- *  como lo estás haciendo con onSubmit={handleLogin}, 
- * el comportamiento predeterminado del navegador es enviar una solicitud HTTP POST a la URL especificada 
- * en el atributo action del formulario o recargar la página si no se especifica ninguna URL
- */
+
   const handleLogin = (e) => {
-    e.preventDefault(); // Evitar el comportamiento predeterminado del formulario
+    e.preventDefault();
     console.log('Email:', email);
     console.log('Password:', password);
     console.log('Remember Me:', rememberMe);
