@@ -5,12 +5,13 @@ import TableRiesgoPaciente from '../../ui/tableRisk';
 import CalculadoraPaciente from '../../ui/riskCalculator';
 import { MyContext } from '../../../MyContext';
 import { LineChart } from '@mui/x-charts';
+import { useRouter } from 'next/navigation';
 
 export default function PacienteInfo() {
+  const router = useRouter();
   const { selectedPatient, selectPatient } = useContext(MyContext);
   const [loading, setLoading] = useState(true);
   const [showAllConsultas, setShowAllConsultas] = useState(false);
-
   useEffect(() => {
     const storedPatientId = localStorage.getItem('selectedPatientId');
     if (storedPatientId) {
@@ -72,6 +73,7 @@ export default function PacienteInfo() {
     }
     return cell;
   };
+
 
   const latestConsulta = selectedPatient.consultas.length > 0 ? selectedPatient.consultas[selectedPatient.consultas.length - 1] : null;
 

@@ -94,6 +94,7 @@ export default function CalculadoraPaciente({ columns = [], data = [], rowClickU
                 >
                     Calcular
                 </button>
+                
                 <button
                     type="button"
                     className="bg-[#087021] hover:bg-green-400 text-white font-bold py-2 px-4 rounded"
