@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import TablePaciente from '../../ui/table';
+import ColectivoComponent from '../../ui/colectivo'
 import Searcher from '../../ui/searcher';
 
 export default function PropheciaPage() {
@@ -18,6 +19,7 @@ export default function PropheciaPage() {
                     <h1 className="text-start mb-4"><strong>ULTIMAS CONSULTAS</strong></h1>
                     <hr className="border-gray-700 my-4" />
                     {view === 'individual' && <TablePaciente rowClickUrl="/paciente" />}
+                    {view === 'colectivo' && <ColectivoComponent/>}
                 </div>
                 <div className="w-full sm:w-1/2 lg:w-1/3 p-4">
                     <h1 className="mb-4">
