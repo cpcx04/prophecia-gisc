@@ -6,17 +6,31 @@ import { BarChart } from '@mui/x-charts';
 export default function ColectivoComponent() {
   const [ageRange, setAgeRange] = useState([20, 50]);
   const [city, setCity] = useState('');
+  const [showCityOptions, setShowCityOptions] = useState(false);
   const [selectedFRCV, setSelectedFRCV] = useState([]);
+  const [searchFRCV, setSearchFRCV] = useState('');
   const [sex, setSex] = useState('');
   const [chartData, setChartData] = useState([]);
 
-  const frcvOptions = ['Hipertensión', 'Diabetes', 'Tabaquismo', 'Dislipidemia', 'Obesidad'];
+
+  const frcvOptions = ['Hipertensión', 'Diabetes', 'Tabaquismo', 'Dislipidemia', 'Obesidad', 'Colesterol', 'Inactividad Fisica'];
+  const filteredFRCVOptions = frcvOptions.filter((option) => option.toLowerCase().includes(searchFRCV.toLowerCase()));
   const sexOptions = ['Masculino', 'Femenino'];
 
   const handleFRCVChange = (option) => {
     setSelectedFRCV((prev) =>
       prev.includes(option) ? prev.filter((item) => item !== option) : [...prev, option]
     );
+  };
+
+  const handleCitySearch = (e) => {
+    setCity(e.target.value);
+    setShowCityOptions(e.target.value.length > 0);
+  };
+
+  const handleCitySelect = (selectedCity) => {
+    setCity(selectedCity);
+    setShowCityOptions(false);
   };
 
   const cities = ['Madrid', 'Barcelona', 'Valencia', 'Sevilla', 'Zaragoza'];
@@ -35,16 +49,9 @@ export default function ColectivoComponent() {
     { month: 'Noviembre', seoul: 40 },
     { month: 'Diciembre', seoul: 30 },
   ];
-
   const filterData = () => {
-    // Example logic to filter data based on form inputs
-    // This should be replaced with the actual logic based on your data source and requirements
-
-    // For demonstration, we are just returning the original dataset
     const filteredData = dataset.map((data) => {
       let riskMultiplier = 1;
-
-      // Apply multipliers based on selected factors
       if (selectedFRCV.includes('Hipertensión')) riskMultiplier += 0.1;
       if (selectedFRCV.includes('Diabetes')) riskMultiplier += 0.1;
       if (selectedFRCV.includes('Tabaquismo')) riskMultiplier += 0.1;
@@ -63,13 +70,13 @@ export default function ColectivoComponent() {
 
   return (
     <div className="flex">
-      <div className="flex flex-col p-4 space-y-6 w-1/2">
+      <div className="flex flex-col p-4 space-y-6 w-full">
         {/* Age Range */}
         <div className="border p-4 rounded space-y-4">
           <h2 className="font-bold text-lg mb-2">Rango de Edad</h2>
           <input
             type="range"
-            className="w-full"
+            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
             min="0"
             max="100"
             value={ageRange[0]}
@@ -88,28 +95,37 @@ export default function ColectivoComponent() {
             className="border p-2 rounded w-full"
             placeholder="Buscar ciudad"
             value={city}
-            onChange={(e) => setCity(e.target.value)}
+            onChange={handleCitySearch}
           />
-          <div className="mt-2 max-h-40 overflow-y-auto">
-            {cities
-              .filter((c) => c.toLowerCase().includes(city.toLowerCase()))
-              .map((filteredCity) => (
-                <div
-                  key={filteredCity}
-                  className="cursor-pointer p-2 hover:bg-gray-200 rounded"
-                  onClick={() => setCity(filteredCity)}
-                >
-                  {filteredCity}
-                </div>
-              ))}
-          </div>
+          {showCityOptions && (
+            <div className="mt-2 max-h-40 overflow-y-auto">
+              {cities
+                .filter((c) => c.toLowerCase().includes(city.toLowerCase()))
+                .map((filteredCity) => (
+                  <div
+                    key={filteredCity}
+                    className="cursor-pointer p-2 hover:bg-gray-200 rounded"
+                    onClick={() => handleCitySelect(filteredCity)}
+                  >
+                    {filteredCity}
+                  </div>
+                ))}
+            </div>
+          )}
         </div>
 
         {/* FRCV */}
         <div className="border p-4 rounded space-y-4">
           <h2 className="font-bold text-lg mb-2">FACTORES DE RIESGO CARDIOVASCULARES (FRCV)</h2>
+          <input
+            type="text"
+            className="border p-2 rounded w-full mb-4"
+            placeholder="Buscar FRCV"
+            value={searchFRCV}
+            onChange={(e) => setSearchFRCV(e.target.value)}
+          />
           <div className="flex flex-wrap space-x-4">
-            {frcvOptions.map((option) => (
+            {filteredFRCVOptions.map((option) => (
               <label key={option} className="flex items-center space-x-2">
                 <input
                   type="checkbox"
@@ -142,24 +158,25 @@ export default function ColectivoComponent() {
         </div>
 
         <button
-          className="bg-blue-500 text-white p-2 rounded"
+          className="bg-[#087021] hover:bg-green-400 text-white p-2 rounded"
           onClick={filterData}
         >
           Actualizar Gráfica
         </button>
       </div>
 
-      <div className="w-1/2 p-4 flex justify-end">
+      <div className="w-full p-4 flex justify-end">
         {/* Bar Chart */}
         <div className="border p-4 rounded w-full">
-          <h2 className="font-bold text-lg mb-2">Gráfica</h2>
+          <h2 className="font-bold text-lg mb-2">Riesgo por meses según casos</h2>
           <div className="h-96 bg-gray-100 rounded flex items-center justify-center">
             <BarChart
               dataset={chartData.length ? chartData : dataset}
-              yAxis={[{ scaleType: 'band', dataKey: 'month' }]}
-              series={[{ dataKey: 'seoul', label: 'Riesgo de Ictus' }]}
+              yAxis={[{scaleType: 'band', dataKey: 'month' }]}
+              series={[{color: '#087021', dataKey: 'seoul', label: 'Riesgo de Ictus' }]}
               layout="horizontal"
-            />
+              borderRadius={15}            
+              />
           </div>
         </div>
       </div>
